@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #This file is part of CanFestival, a library implementing CanOpen Stack. 
@@ -31,7 +31,7 @@ __version__ = "$Revision: 1.48 $"
 if __name__ == '__main__':
     def usage():
         print ("\nUsage of objdictedit.py :")
-        print "\n   %s [Filepath, ...]\n"%sys.argv[0]
+        print (f"\n   {sys.argv[0]} [Filepath, ...]\n")
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
@@ -51,7 +51,6 @@ ScriptDirectory = os.path.split(os.path.realpath(__file__))[0]
 
 # Import module for internationalization
 import gettext
-import __builtin__
 
 # Get folder containing translation files
 localedir = os.path.join(ScriptDirectory,"locale")
@@ -61,17 +60,14 @@ langid = wx.LANGUAGE_DEFAULT
 domain = "objdictgen"
 
 # Define locale for wx
-loc = __builtin__.__dict__.get('loc', None)
-if loc is None:
-    loc = wx.Locale(langid)
-    __builtin__.__dict__['loc'] = loc
-# Define location for searching translation files
-loc.AddCatalogLookupPathPrefix(localedir)
-# Define locale domain
-loc.AddCatalog(domain)
-
-if __name__ == '__main__':
-    __builtin__.__dict__['_'] = wx.GetTranslation
+# loc = __builtin__.__dict__.get('loc', None)
+# if loc is None:
+    # loc = wx.Locale(langid)
+    # __builtin__.__dict__['loc'] = loc
+# # Define location for searching translation files
+# loc.AddCatalogLookupPathPrefix(localedir)
+# # Define locale domain
+# loc.AddCatalog(domain)
 
 from nodemanager import *
 from nodeeditortemplate import NodeEditorTemplate
@@ -89,7 +85,7 @@ try:
             wx.PyEvent.__init__(self)
             self.SetEventType(EVT_HTML_URL_CLICK)
             self.linkinfo = (linkinfo.GetHref(), linkinfo.GetTarget())
-            
+
     class UrlClickHtmlWindow(wx.html.HtmlWindow):
         """ HTML window that generates and OnLinkClicked event.
 
