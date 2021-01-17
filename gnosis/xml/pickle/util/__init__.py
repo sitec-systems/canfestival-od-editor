@@ -1,5 +1,5 @@
-from _flags import *
-from _util import \
+from gnosis.xml.pickle.util.flags import *
+from gnosis.xml.pickle.util.util import \
      _klass, _module, _EmptyClass, subnodes, \
      safe_eval, safe_string, unsafe_string, safe_content, unsafe_content, \
      _mini_getstack, _mini_currentframe, \

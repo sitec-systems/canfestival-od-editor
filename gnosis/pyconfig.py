@@ -45,7 +45,7 @@
 #				   just that each testcase compiles & runs OK.
 
 # Note: Compatibility with Python 1.5 is required here.
-import __builtin__, string
+import builtins, string
 
 # FYI, there are tests for these PEPs:
 #
@@ -105,15 +105,15 @@ def compile_code( codestr ):
     if codestr and codestr[-1] != '\n':
         codestr = codestr + '\n'
 
-    return __builtin__.compile(codestr, 'dummyname', 'exec')
+    return builtins.compile(codestr, 'dummyname', 'exec')
 
 def can_run_code( codestr ):
     try:
         eval( compile_code(codestr) )
         return 1
-    except Exception,exc:
+    except Exception as exc:
         if SHOW_DEBUG_INFO:
-            print "RUN EXC ",str(exc)
+            print("RUN EXC ",str(exc))
             
         return 0
 
@@ -359,11 +359,11 @@ def Can_AssignDoc():
 
 def runtest(msg, test):
     r = test()
-    print "%-40s %s" % (msg,['no','yes'][r])
+    print("%-40s %s" % (msg,['no','yes'][r]))
 
 def runtest_1arg(msg, test, arg):
     r = test(arg)
-    print "%-40s %s" % (msg,['no','yes'][r])
+    print("%-40s %s" % (msg,['no','yes'][r]))
 
 if __name__ == '__main__':
 
@@ -372,37 +372,37 @@ if __name__ == '__main__':
     # show banner w/version
     try:
         v = sys.version_info
-        print "Python %d.%d.%d-%s [%s, %s]" % (v[0],v[1],v[2],str(v[3]),
-                                               os.name,sys.platform)
+        print("Python %d.%d.%d-%s [%s, %s]" % (v[0],v[1],v[2],str(v[3]),
+                                               os.name,sys.platform))
     except:
         # Python 1.5 lacks sys.version_info
-        print "Python %s [%s, %s]" % (string.split(sys.version)[0],
-                                      os.name,sys.platform)
+        print("Python %s [%s, %s]" % (string.split(sys.version)[0],
+                                      os.name,sys.platform))
 
     # Python 1.5
-    print "			** Python 1.5 features **"
+    print("			** Python 1.5 features **")
     runtest("Can assign to __doc__?", Can_AssignDoc)
     
     # Python 1.6
-    print "			** Python 1.6 features **"
+    print("			** Python 1.6 features **")
     runtest("Have Unicode?", Have_Unicode)
     runtest("Have string methods?", Have_StringMethods)
 
     # Python 2.0
-    print "			** Python 2.0 features **"	
+    print("			** Python 2.0 features **")	
     runtest("Have augmented assignment?", Have_AugmentedAssignment)
     runtest("Have list comprehensions?", Have_ListComprehensions)
     runtest("Have 'import module AS ...'?", Have_ImportAs)
 
     # Python 2.1
-    print "			** Python 2.1 features **"	
+    print("			** Python 2.1 features **")	
     runtest("Have __future__?", Have_Future)
     runtest("Have rich comparison?", Have_RichComparison)
     runtest("Have function attributes?", Have_FunctionAttributes)
     runtest("Have nested scopes?", Have_NestedScopes)
 
     # Python 2.2
-    print "			** Python 2.2 features **"		
+    print("			** Python 2.2 features **")		
     runtest("Have True/False?", Have_TrueFalse)	
     runtest("Have 'object' type?", Have_ObjectClass)
     runtest("Have __slots__?", Have_Slots)
@@ -415,7 +415,7 @@ if __name__ == '__main__':
     runtest("Unified longs/ints?", Have_UnifiedLongInts)
     
     # Python 2.3
-    print "		   ** Python 2.3 features **"		
+    print("		   ** Python 2.3 features **")		
     runtest("Have enumerate()?", Have_Enumerate)
     runtest("Have basestring?", Have_Basestring)
     runtest("Longs > maxint in range()?", Have_LongRanges)
@@ -425,7 +425,7 @@ if __name__ == '__main__':
         runtest_1arg("bool is a baseclass [expect 'no']?", IsLegal_BaseClass, 'bool')
     
     # Python 2.4
-    print "		   ** Python 2.4 features **"		
+    print("		   ** Python 2.4 features **")		
     runtest("Have builtin sets?", Have_BuiltinSets)
     runtest("Have function/method decorators?", Have_Decorators)
     runtest("Have multiline imports?", Have_MultilineImports)

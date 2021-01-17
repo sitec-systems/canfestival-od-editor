@@ -15,7 +15,7 @@ _unmutators_by_tag = {}
 def __disable_extensions():
     global _mutators_by_classtype
     _mutators_by_classtype = {}
-    for tag in _unmutators_by_tag.keys():
+    for tag in list(_unmutators_by_tag.keys()):
         # rawpickle is always on -- we have to fallback on
         # it when everything else fails
         if tag != "rawpickle":
@@ -25,8 +25,7 @@ _has_coredata_cache = {}
 
 # sanity in case Python changes ...
 if gnosis.pyconfig.Have_BoolClass() and gnosis.pyconfig.IsLegal_BaseClass('bool'):
-    raise XMLPicklingError, \
-        "Assumption broken - can now use bool as baseclass!"
+    raise XMLPicklingError("Assumption broken - can now use bool as baseclass!")
 
 Have_BoolClass = gnosis.pyconfig.Have_BoolClass()
 
@@ -54,7 +53,7 @@ def get_mutator(obj):
     if not hasattr(obj,'__class__'):
         return None
 
-    if _has_coredata_cache.has_key(obj.__class__):
+    if obj.__class__ in _has_coredata_cache:
         return _has_coredata_cache[obj.__class__]
 
     if hasCoreData(obj):
@@ -76,8 +75,7 @@ def mutate(obj):
     tobj = mutator.mutate(obj)
 
     if not isinstance(tobj,XMLP_Mutated):
-        raise XMLPicklingError, \
-              "Bad type returned from mutator %s" % mutator
+        raise XMLPicklingError("Bad type returned from mutator %s" % mutator)
     
     return (mutator.tag,tobj.obj,mutator.in_body,tobj.extra)
 
@@ -96,8 +94,7 @@ def try_mutate(obj,alt_tag,alt_in_body,alt_extra):
     tobj = mutator.mutate(obj)
 
     if not isinstance(tobj,XMLP_Mutated):
-        raise XMLPicklingError, \
-              "Bad type returned from mutator %s" % mutator
+        raise XMLPicklingError("Bad type returned from mutator %s" % mutator)
     
     return (mutator.tag,tobj.obj,mutator.in_body,tobj.extra)
 
