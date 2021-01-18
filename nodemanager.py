@@ -65,7 +65,7 @@ class UndoBuffer:
 			self.MinIndex = 0
 			self.MaxIndex = 0
 		# Initialising buffer with currentstate at the first place
-		for i in xrange(UndoBufferLength):
+		for i in range(UndoBufferLength):
 			if i == 0:
 				self.Buffer.append(currentstate)
 			else:
@@ -211,7 +211,7 @@ class NodeManager:
 					# Charging DS-302 profile if choosen by user
 					if os.path.isfile(DS302Path):
 						try:
-							execfile(DS302Path)
+							exec(compile(open(DS302Path, "rb").read(), DS302Path, 'exec'))
 							self.CurrentNode.SetDS302Profile(Mapping)
 							self.CurrentNode.ExtendSpecificMenu(AddMenuEntries)
 						except:
@@ -233,7 +233,7 @@ class NodeManager:
 				for comm, mapping in [(0x1400, 0x1600),(0x1800, 0x1A00)]:
 					firstparamindex = self.GetLineFromIndex(comm)
 					firstmappingindex = self.GetLineFromIndex(mapping)
-					AddIndexList.extend(range(firstparamindex, firstparamindex + 4))
+					AddIndexList.extend(list(range(firstparamindex, firstparamindex + 4)))
 					for idx in range(firstmappingindex, firstmappingindex + 4):
 						AddIndexList.append(idx)
 						AddSubIndexList.append((idx, 8))
@@ -255,7 +255,7 @@ class NodeManager:
 		if profile != "None":
 			# Try to charge the profile given
 			try:
-				execfile(filepath)
+				exec(compile(open(filepath, "rb").read(), filepath, 'exec'))
 				node.SetProfileName(profile)
 				node.SetProfile(Mapping)
 				node.SetSpecificMenu(AddMenuEntries)
@@ -313,8 +313,8 @@ class NodeManager:
 		if self.NodeIndex in self.UndoBuffers and (self.UndoBuffers[self.NodeIndex].IsCurrentSaved() or ignore):
 			self.RemoveNodeBuffer(self.NodeIndex)
 			if len(self.UndoBuffers) > 0:
-				previousindexes = [idx for idx in self.UndoBuffers.keys() if idx < self.NodeIndex]
-				nextindexes = [idx for idx in self.UndoBuffers.keys() if idx > self.NodeIndex]
+				previousindexes = [idx for idx in list(self.UndoBuffers.keys()) if idx < self.NodeIndex]
+				nextindexes = [idx for idx in list(self.UndoBuffers.keys()) if idx > self.NodeIndex]
 				if len(previousindexes) > 0:
 					previousindexes.sort()
 					self.NodeIndex = previousindexes[-1]
@@ -378,7 +378,7 @@ class NodeManager:
 			default = self.GetTypeDefaultValue(subentry_infos["type"])	 
 		# First case entry is record
 		if infos["struct"] & OD_IdenticalSubindexes: 
-			for i in xrange(1, min(number,subentry_infos["nbmax"]-length) + 1):
+			for i in range(1, min(number,subentry_infos["nbmax"]-length) + 1):
 				node.AddEntry(index, length + i, default)
 			if not disable_buffer:
 				self.BufferCurrentNode()
@@ -386,7 +386,7 @@ class NodeManager:
 		# Second case entry is array, only possible for manufacturer specific
 		elif infos["struct"] & OD_MultipleSubindexes and 0x2000 <= index <= 0x5FFF:
 			values = {"name" : "Undefined", "type" : 5, "access" : "rw", "pdo" : True}
-			for i in xrange(1, min(number,0xFE-length) + 1):
+			for i in range(1, min(number,0xFE-length) + 1):
 				node.AddMappingEntry(index, length + i, values = values.copy())
 				node.AddEntry(index, length + i, 0)
 			if not disable_buffer:
@@ -408,7 +408,7 @@ class NodeManager:
 			nbmin = 1
 		# Entry is a record, or is an array of manufacturer specific
 		if infos["struct"] & OD_IdenticalSubindexes or 0x2000 <= index <= 0x5FFF and infos["struct"] & OD_IdenticalSubindexes:
-			for i in xrange(min(number, length - nbmin)):
+			for i in range(min(number, length - nbmin)):
 				self.RemoveCurrentVariable(index, length - i)
 			self.BufferCurrentNode()
 
@@ -497,7 +497,7 @@ class NodeManager:
 						default = self.GetTypeDefaultValue(subentry_infos["type"])
 					node.AddEntry(index, value = [])
 					if "nbmin" in subentry_infos:
-						for i in xrange(subentry_infos["nbmin"]):
+						for i in range(subentry_infos["nbmin"]):
 							node.AddEntry(index, i + 1, default)
 					else:
 						node.AddEntry(index, 1, default)
@@ -581,7 +581,7 @@ class NodeManager:
 			for menu,list in self.CurrentNode.GetSpecificMenu():
 				for i in list:
 					iinfos = self.GetEntryInfos(i)
-					indexes = [i + incr * iinfos["incr"] for incr in xrange(iinfos["nbmax"])] 
+					indexes = [i + incr * iinfos["incr"] for incr in range(iinfos["nbmax"])] 
 					if index in indexes:
 						found = True
 						diff = index - i
@@ -613,10 +613,10 @@ class NodeManager:
 					if struct == rec:
 						values = {"name" : name + " %d[(sub)]", "type" : 0x05, "access" : "rw", "pdo" : True, "nbmax" : 0xFE}
 						node.AddMappingEntry(index, 1, values = values)
-						for i in xrange(number):
+						for i in range(number):
 							node.AddEntry(index, i + 1, 0)
 					else:
-						for i in xrange(number):
+						for i in range(number):
 							values = {"name" : "Undefined", "type" : 0x05, "access" : "rw", "pdo" : True}
 							node.AddMappingEntry(index, i + 1, values = values)
 							node.AddEntry(index, i + 1, 0)
@@ -741,7 +741,7 @@ class NodeManager:
 					node.UpdateMapVariable(index, subIndex, size)
 				elif editor in ["access","raccess"]:
 					dic = {}
-					for abbrev,access in AccessType.iteritems():
+					for abbrev,access in AccessType.items():
 						dic[access] = abbrev
 					value = dic[value]
 					if editor == "raccess" and not node.IsMappingEntry(index):
@@ -800,7 +800,7 @@ class NodeManager:
 
 	def OneFileHasChanged(self):
 		result = False
-		for buffer in self.UndoBuffers.values():
+		for buffer in list(self.UndoBuffers.values()):
 			result |= not buffer.IsCurrentSaved()
 		return result
 
@@ -808,7 +808,7 @@ class NodeManager:
 		return len(self.UndoBuffers)
 
 	def GetBufferIndexes(self):
-		return self.UndoBuffers.keys()
+		return list(self.UndoBuffers.keys())
 
 	def LoadCurrentPrevious(self):
 		self.CurrentNode = self.UndoBuffers[self.NodeIndex].Previous().Copy()
@@ -824,7 +824,7 @@ class NodeManager:
 		return self.NodeIndex
 
 	def ChangeCurrentNode(self, index):
-		if index in self.UndoBuffers.keys():
+		if index in list(self.UndoBuffers.keys()):
 			self.NodeIndex = index
 			self.CurrentNode = self.UndoBuffers[self.NodeIndex].Current().Copy()
 	
@@ -840,7 +840,7 @@ class NodeManager:
 		return self.GetFilename(self.NodeIndex)
 	
 	def GetAllFilenames(self):
-		indexes = self.UndoBuffers.keys()
+		indexes = list(self.UndoBuffers.keys())
 		indexes.sort()
 		return [self.GetFilename(idx) for idx in indexes]
 	
@@ -875,7 +875,7 @@ class NodeManager:
 
 	def GetCurrentCommunicationLists(self):
 		list = []
-		for index in MappingDictionary.iterkeys():
+		for index in MappingDictionary.keys():
 			if 0x1000 <= index < 0x1200:
 				list.append(index)
 		return self.GetProfileLists(MappingDictionary, list)
@@ -891,7 +891,7 @@ class NodeManager:
 		exclusionlist = []
 		for name, list in self.CurrentNode.GetSpecificMenu():
 			exclusionlist.extend(list)
-		for index in mappingdictionary.iterkeys():
+		for index in mappingdictionary.keys():
 			if index not in exclusionlist:
 				validlist.append(index)
 		return self.GetProfileLists(mappingdictionary, validlist)
@@ -1005,10 +1005,10 @@ class NodeManager:
 				good &= min <= index <= max
 			if good:
 				validchoices.append((menu, None))
-		list = [index for index in MappingDictionary.keys() if index >= 0x1000]
+		list = [index for index in list(MappingDictionary.keys()) if index >= 0x1000]
 		profiles = self.CurrentNode.GetMappings(False)
 		for profile in profiles:
-			list.extend(profile.keys())
+			list.extend(list(profile.keys()))
 		list.sort()
 		for index in list:
 			if min <= index <= max and not self.CurrentNode.IsEntry(index) and index not in exclusionlist:
