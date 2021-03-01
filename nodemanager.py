@@ -1211,7 +1211,7 @@ class NodeManager:
             editors = []
             values = node.GetEntry(index, compute=False)
             params = node.GetParamsEntry(index)
-            if isinstance(values, ListType):
+            if isinstance(values, list):
                 for i, value in enumerate(values):
                     data.append({"value": value})
                     data[-1].update(params[i])

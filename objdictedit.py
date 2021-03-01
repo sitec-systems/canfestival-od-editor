@@ -46,7 +46,7 @@ if __name__ == '__main__':
             usage()
             sys.exit()
 
-    app = wx.PySimpleApp()
+    app = wx.App()
 
 ScriptDirectory = os.path.split(os.path.realpath(__file__))[0]
 

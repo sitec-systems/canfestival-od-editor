@@ -227,7 +227,7 @@ class SubindexTable(wx.grid.PyGridTableBase):
     def GetValue(self, row, col, translate=True):
         if row < self.GetNumberRows():
             colname = self.GetColLabelValue(col, False)
-            value = unicode(self.data[row].get(colname, ""))
+            value = str(self.data[row].get(colname, ""))
             if translate and (colname == "access" or self.editors[row][colname]
                               in ["bool", "option"]
                               or self.editors[row][colname] == "map"
