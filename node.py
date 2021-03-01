@@ -1538,9 +1538,8 @@ class Node:
                 if callback != None:
                     self.ParamsDictionary[index]["callback"] = callback
                 return True
-            elif type(
-                    self.Dictionary[index]
-            ) == list and 0 <= subIndex <= len(self.Dictionary[index]):
+            elif type(self.Dictionary[index]) == list and 0 <= subIndex <= len(
+                    self.Dictionary[index]):
                 if (comment != None or save != None or callback != None
                         or buffer_size != None
                     ) and subIndex not in self.ParamsDictionary[index]:
@@ -1618,9 +1617,8 @@ class Node:
                 else:
                     return self.CompileValue(self.Dictionary[index], index,
                                              compute)
-            elif type(
-                    self.Dictionary[index]
-            ) == list and 0 < subIndex <= len(self.Dictionary[index]):
+            elif type(self.Dictionary[index]) == list and 0 < subIndex <= len(
+                    self.Dictionary[index]):
                 return self.CompileValue(self.Dictionary[index][subIndex - 1],
                                          index, compute)
         return None
@@ -1659,9 +1657,8 @@ class Node:
                 if index in self.ParamsDictionary:
                     result.update(self.ParamsDictionary[index])
                 return result
-            elif type(
-                    self.Dictionary[index]
-            ) == list and 0 <= subIndex <= len(self.Dictionary[index]):
+            elif type(self.Dictionary[index]) == list and 0 <= subIndex <= len(
+                    self.Dictionary[index]):
                 result = DefaultParams.copy()
                 if index in self.ParamsDictionary and subIndex in self.ParamsDictionary[
                         index]:
