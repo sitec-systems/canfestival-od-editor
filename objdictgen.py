@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#This file is part of CanFestival, a library implementing CanOpen Stack. 
+#This file is part of CanFestival, a library implementing CanOpen Stack.
 #
 #Copyright (C): Edouard TISSERANT, Francis DUPIN and Laurent BESSARD
 #
@@ -21,16 +21,18 @@
 #License along with this library; if not, write to the Free Software
 #Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import getopt,sys,os
+import getopt, sys, os
 from types import *
 
 from nodemanager import *
 
 _ = lambda x: x
 
+
 def usage():
     print _("\nUsage of objdictgen.py :")
-    print "\n   %s XMLFilePath CFilePath\n"%sys.argv[0]
+    print "\n   %s XMLFilePath CFilePath\n" % sys.argv[0]
+
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
@@ -45,7 +47,7 @@ for o, a in opts:
         sys.exit()
 
 fileIn = ""
-fileOut = ""        
+fileOut = ""
 if len(args) == 2:
     fileIn = args[0]
     fileOut = args[1]
@@ -65,7 +67,7 @@ if __name__ == '__main__':
                 print result
                 sys.exit(-1)
         else:
-            print _("%s is not a valid file!")%fileIn
+            print _("%s is not a valid file!") % fileIn
             sys.exit(-1)
         print _("Writing output file")
         result = manager.ExportCurrentToCFile(fileOut)
@@ -73,4 +75,3 @@ if __name__ == '__main__':
             print result
             sys.exit(-1)
         print _("All done")
-    
