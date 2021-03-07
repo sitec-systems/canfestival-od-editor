@@ -376,7 +376,7 @@ class NodeManager:
         return eds_utils.GenerateEDSFile(filepath, self.CurrentNode)
 
     """
-    Build the C definition of Object Dictionary for current node 
+    Build the C definition of Object Dictionary for current node
     """
 
     def ExportCurrentToCFile(self, filepath):
@@ -1181,15 +1181,15 @@ class NodeManager:
                 good &= min <= index <= max
             if good:
                 validchoices.append((menu, None))
-        list = [
+        choice_list = [
             index for index in list(MappingDictionary.keys())
             if index >= 0x1000
         ]
         profiles = self.CurrentNode.GetMappings(False)
         for profile in profiles:
-            list.extend(list(profile.keys()))
-        list.sort()
-        for index in list:
+            choice_list.extend(list(profile.keys()))
+        choice_list.sort()
+        for index in choice_list:
             if min <= index <= max and not self.CurrentNode.IsEntry(
                     index) and index not in exclusionlist:
                 validchoices.append((self.GetEntryName(index), index))
@@ -1205,113 +1205,113 @@ class NodeManager:
             return self.GetNodeEntryValues(self.CurrentNode, index)
 
     def GetNodeEntryValues(self, node, index):
-        if node and node.IsEntry(index):
-            entry_infos = node.GetEntryInfos(index)
-            data = []
-            editors = []
-            values = node.GetEntry(index, compute=False)
-            params = node.GetParamsEntry(index)
-            if isinstance(values, list):
-                for i, value in enumerate(values):
-                    data.append({"value": value})
-                    data[-1].update(params[i])
-            else:
-                data.append({"value": values})
-                data[-1].update(params)
-
-            for i, dic in enumerate(data):
-                if dic["buffer_size"] and dic["buffer_size"].isdigit(
-                ) is not True:
-                    dic["buffer_size"] = ""
-
-                infos = node.GetSubentryInfos(index, i)
-                if infos["name"] == "Number of Entries":
-                    dic["buffer_size"] = ""
-                    dic["subindex"] = "0x%02X" % i
-                    dic["name"] = infos["name"]
-                    dic["type"] = node.GetTypeName(infos["type"])
-                    if dic["type"] is None:
-                        dic["type"] = "Unknown"
-                        dic["buffer_size"] = ""
-                    dic["access"] = AccessType[infos["access"]]
-                    dic["save"] = OptionType[dic["save"]]
-                    editor = {
-                        "subindex": None,
-                        "name": None,
-                        "type": None,
-                        "value": None,
-                        "access": None,
-                        "save": "option",
-                        "callback": "option",
-                        "comment": "string",
-                        "buffer_size": "string"
-                    }
-                    # if isinstance(values, list) and i == 0:
-                    # if 0x1600 <= index <= 0x17FF or 0x1A00 <= index <= 0x1C00:
-                    # editor["access"] = "raccess"
-                    # else:
-                    # if infos["user_defined"]:
-                    # if entry_infos["struct"] & OD_IdenticalSubindexes:
-                    # if i == 1:
-                    # editor["type"] = "type"
-                    # editor["access"] = "access"
-                    # else:
-                    # if entry_infos["struct"] & OD_MultipleSubindexes:
-                    # editor["name"] = "string"
-                    # editor["type"] = "type"
-                    # editor["access"] = "access"
-                    # if index < 0x260:
-                    # if i == 1:
-                    # dic["value"] = node.GetTypeName(dic["value"])
-                    # elif 0x1600 <= index <= 0x17FF or 0x1A00 <= index <= 0x1C00:
-                    # editor["value"] = "map"
-                    # dic["value"] = node.GetMapName(dic["value"])
-                    # else:
-                    # if dic["type"].startswith("VISIBLE_STRING") or dic["type"].startswith("OCTET_STRING"):
-                    # editor["value"] = "string"
-                    # elif dic["type"] in ["TIME_OF_DAY","TIME_DIFFERENCE"]:
-                    # editor["value"] = "time"
-                    # elif dic["type"] == "DOMAIN":
-                    # if index == 0x1F22:
-                    # editor["value"] = "dcf"
-                    # else:
-                    # editor["value"] = "domain"
-                    # dic["value"] = dic["value"].encode('hex_codec')
-                    # elif dic["type"] == "BOOLEAN":
-                    # editor["value"] = "bool"
-                    # dic["value"] = BoolType[dic["value"]]
-                    # dic["buffer_size"] = ""
-                    # result = type_model.match(dic["type"])
-                    # if result:
-                    # values = result.groups()
-                    # if values[0] == "UNSIGNED":
-                    # dic["buffer_size"] = ""
-                    # try:
-                    # format = "0x%0" + str(int(values[1])/4) + "X"
-                    # dic["value"] = format%dic["value"]
-                    # except:
-                    # pass
-                    # editor["value"] = "string"
-                    # if values[0] == "INTEGER":
-                    # editor["value"] = "number"
-                # dic["buffer_size"] = ""
-                # elif values[0] == "REAL":
-                # editor["value"] = "float"
-                # dic["buffer_size"] = ""
-                # elif values[0] in ["VISIBLE_STRING", "OCTET_STRING"]:
-                # editor["length"] = values[0]
-                # result = range_model.match(dic["type"])
-                # if result:
-                # values = result.groups()
-                # if values[0] in ["UNSIGNED", "INTEGER", "REAL"]:
-                # editor["min"] = values[2]
-                # editor["max"] = values[3]
-                dic["buffer_size"] = ""
-                editors.append(editor)
-            return data, editors
-        else:
+        print("Call GetNodeEntryValues function")
+        if not node or not node.IsEntry(index):
             return None
-        return None
+
+        entry_infos = node.GetEntryInfos(index)
+        print(f'entry infos {entry_infos}')
+        data = []
+        editors = []
+        values = node.GetEntry(index, compute=False)
+        params = node.GetParamsEntry(index)
+        if isinstance(values, list):
+            for i, value in enumerate(values):
+                data.append({"value": value})
+                data[-1].update(params[i])
+        else:
+            data.append({"value": values})
+            data[-1].update(params)
+
+        for i, dic in enumerate(data):
+            if dic["buffer_size"] and dic["buffer_size"].isdigit() is not True:
+                dic["buffer_size"] = ""
+
+            infos = node.GetSubentryInfos(index, i)
+            if infos["name"] == "Number of Entries":
+                dic["buffer_size"] = ""
+                dic["subindex"] = "0x%02X" % i
+                dic["name"] = infos["name"]
+                dic["type"] = node.GetTypeName(infos["type"])
+                if dic["type"] is None:
+                    dic["type"] = "Unknown"
+                    dic["buffer_size"] = ""
+                dic["access"] = AccessType[infos["access"]]
+                dic["save"] = OptionType[dic["save"]]
+                editor = {
+                    "subindex": None,
+                    "name": None,
+                    "type": None,
+                    "value": None,
+                    "access": None,
+                    "save": "option",
+                    "callback": "option",
+                    "comment": "string",
+                    "buffer_size": "string"
+                }
+                if isinstance(values, list) and i == 0:
+                    if 0x1600 <= index <= 0x17FF or 0x1A00 <= index <= 0x1C00:
+                        editor["access"] = "raccess"
+                else:
+                    if infos["user_defined"]:
+                        if entry_infos["struct"] & OD_IdenticalSubindexes:
+                            if i == 1:
+                                editor["type"] = "type"
+                                editor["access"] = "access"
+                        else:
+                            if entry_infos["struct"] & OD_MultipleSubindexes:
+                                editor["name"] = "string"
+                            editor["type"] = "type"
+                            editor["access"] = "access"
+                    if index < 0x260:
+                        if i == 1:
+                            dic["value"] = node.GetTypeName(dic["value"])
+                    elif 0x1600 <= index <= 0x17FF or 0x1A00 <= index <= 0x1C00:
+                        editor["value"] = "map"
+                        dic["value"] = node.GetMapName(dic["value"])
+                    else:
+                        if dic["type"].startswith("VISIBLE_STRING") or dic["type"].startswith("OCTET_STRING"):
+                            editor["value"] = "string"
+                        elif dic["type"] in ["TIME_OF_DAY","TIME_DIFFERENCE"]:
+                            editor["value"] = "time"
+                        elif dic["type"] == "DOMAIN":
+                            if index == 0x1F22:
+                                editor["value"] = "dcf"
+                            else:
+                                editor["value"] = "domain"
+                            dic["value"] = dic["value"].encode('hex_codec')
+                        elif dic["type"] == "BOOLEAN":
+                            editor["value"] = "bool"
+                            dic["value"] = BoolType[dic["value"]]
+                            dic["buffer_size"] = ""
+                        result = type_model.match(dic["type"])
+                        if result:
+                            values = result.groups()
+                            if values[0] == "UNSIGNED":
+                                dic["buffer_size"] = ""
+                                try:
+                                    format = "0x%0" + str(int(values[1])/4) + "X"
+                                    dic["value"] = format%dic["value"]
+                                except:
+                                    pass
+                                editor["value"] = "string"
+                            if values[0] == "INTEGER":
+                                editor["value"] = "number"
+                                dic["buffer_size"] = ""
+                            elif values[0] == "REAL":
+                                editor["value"] = "float"
+                                dic["buffer_size"] = ""
+                            elif values[0] in ["VISIBLE_STRING", "OCTET_STRING"]:
+                                editor["length"] = values[0]
+                        result = range_model.match(dic["type"])
+                        if result:
+                            values = result.groups()
+                            if values[0] in ["UNSIGNED", "INTEGER", "REAL"]:
+                                editor["min"] = values[2]
+                                editor["max"] = values[3]
+                                dic["buffer_size"] = ""
+                editors.append(editor)
+        return data, editors
 
     def AddToDCF(self, node_id, index, subindex, size, value):
         if self.CurrentNode.IsEntry(0x1F22, node_id):
