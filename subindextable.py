@@ -228,6 +228,8 @@ class SubindexTable(wx.grid.PyGridTableBase):
         if row < self.GetNumberRows():
             colname = self.GetColLabelValue(col, False)
             value = str(self.data[row].get(colname, ""))
+            print(f'Grepping {row} - {colname}')
+            print(f'{self.editors[row]}')
             if translate and (colname == "access" or self.editors[row][colname]
                               in ["bool", "option"]
                               or self.editors[row][colname] == "map"
