@@ -184,13 +184,13 @@ SizeConversion = {
 }
 
 
-class SubindexTable(wx.grid.PyGridTableBase):
+class SubindexTable(wx.grid.GridTableBase):
     """
     A custom wxGrid Table using user supplied data
     """
     def __init__(self, parent, data, editors, colnames):
         # The base class must be initialized *first*
-        wx.grid.PyGridTableBase.__init__(self)
+        wx.grid.GridTableBase.__init__(self)
         self.data = data
         self.editors = editors
         self.CurrentIndex = 0
@@ -228,13 +228,13 @@ class SubindexTable(wx.grid.PyGridTableBase):
         if row < self.GetNumberRows():
             colname = self.GetColLabelValue(col, False)
             value = str(self.data[row].get(colname, ""))
-            print(f'Grepping {row} - {colname}')
-            print(f'{self.editors[row]}')
-            if translate and (colname == "access" or self.editors[row][colname]
-                              in ["bool", "option"]
-                              or self.editors[row][colname] == "map"
-                              and value == "None"):
-                value = value
+            # if len(self.editors) == 0:
+            #     return value
+            # elif colname == "access" or self.editors[row][colname]
+            #                   in ["bool", "option"]
+            #                   or self.editors[row][colname] == "map"
+            #                   and value == "None":
+            #     value = value
             return value
 
     def GetEditor(self, row, col):
@@ -314,6 +314,10 @@ class SubindexTable(wx.grid.PyGridTableBase):
 
         typelist = None
         maplist = None
+
+        if len(self.editors) == 0:
+            return
+
         for row in range(self.GetNumberRows()):
             editors = self.editors[row]
             if wx.Platform == '__WXMSW__':
